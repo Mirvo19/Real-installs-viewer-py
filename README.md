@@ -10,9 +10,14 @@ A simple Python tool to check app install statistics from the Google Play Store.
 
 ## How to Use
 
+### Using the Executable
+1.  Download the .exe file then,
+2.  Double-click on `rawviewer.exe` to run the application.
+3.  Enter the name of the app you want to check.
+
 ### Local Installation
 1. Make sure you have Python installed
-2. Install the required package: `pip install google-play-scraper pandas`
+2. Install the required package: `pip install google-play-scraper`
 3. Run the program: `python "raw viewer.py"`
 4. Enter the name of the app you want to check
 
