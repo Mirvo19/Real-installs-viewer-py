@@ -1,34 +1,51 @@
 # Real Installs Viewer
 
-A simple Python tool to check app install statistics from the Google Play Store.
+A web application to check app install statistics from the Google Play Store.
 
 ## What It Does
-- Searches for any app on Google Play Store
-- Shows you the app's basic info
-- Displays the number of installs
-- Shows the app's rating and number of reviews
+- Searches for any app on the Google Play Store via a simple web interface.
+- Shows the app's basic info like developer and title.
+- Displays both the formatted install count (e.g., "1,000,000+") and the raw `realInstalls` number.
+- Shows the app's rating and total number of reviews.
 
-## How to Use
+## How to Use the Web Application
 
-### Using the Executable
-1.  Download the .exe file then,
-2.  Double-click on `rawviewer.exe` to run the application.
-3.  Enter the name of the app you want to check.
+This is the recommended way to use the tool.
 
-### Local Installation
-1. Make sure you have Python installed
-2. Install the required package: `pip install google-play-scraper`
-3. Run the program: `python "raw viewer.py"`
-4. Enter the name of the app you want to check
+### Prerequisites
+- Python 3.x
+- `pip` (Python package installer)
 
-### Google Colab
-You can also use this tool in Google Colab:
-1. Open the Colab notebook
-2. Click "Run All" or run each cell manually
-3. Scroll down to the interactive section
-4. Enter the app name when prompted
+### Installation & Setup
+1.  Make sure you have all the project files, including `app.py`, the `template` directory, and the `static` directory.
+2.  Install the required Python packages:
+    ```sh
+    pip install Flask google-play-scraper
+    ```
+3.  Run the web application:
+    ```sh
+    python app.py
+    ```
+4.  Open your web browser and go to `http://127.0.0.1:5000`.
+5.  Enter the name of the app you want to check and click "Search".
 
-Link of the google collab: https://colab.research.google.com/drive/1spvwNr0Ey0-HVW9SdvxfaF4fUMvQS48A?usp=sharing
+---
+
+## Alternative: Command-Line Tool
+
+The project also includes a simple command-line version.
+
+### How to Use
+1. Make sure you have Python installed.
+2. Install the required package: 
+   ```sh
+   pip install google-play-scraper
+   ```
+3. Run the program from your terminal: 
+   ```sh
+   python rawviewer.py
+   ```
+4. Enter the name of the app when prompted.
 
 ## Note
 For best results, use the exact app name as it appears on the Play Store.
