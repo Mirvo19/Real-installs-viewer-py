@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Real installs viewer</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    </head>
+    <body>
+     <div class="ctn">
+      <h1>
+        Real Installs Viewer
+      </h1>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Enter app name, Enter from playstore for better results...">
+        <button onclick="searchApp()">Search</button>
+      </div>
+      <div id="reasult" class="reasult"></div>
+     </div>
+
+    </body>
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+</html>
