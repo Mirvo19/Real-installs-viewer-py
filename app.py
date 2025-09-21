@@ -106,7 +106,5 @@ def serch_app():
 
     return jsonify(get_app_data(app_name))
 
-app = flask_app
-
 if __name__ == '__main__':
-    flask_app.run(debug=True)
+    app.run(debug=True)
