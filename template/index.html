@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Real installs viewer</title>
-        <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
-    </head>
-    <body>
-     <div class="ctn">
-      <h1>
-        Real Installs Viewer
-      </h1>
-      <div class="search-container">
-        <input type="text" id="search-input" placeholder="Enter app name, Enter from playstore for better results...">
-        <button onclick="searchApp()">Search</button>
-      </div>
-      <div id="reasult" class="reasult"></div>
-     </div>
-
-    </body>
-    <script src="{{url_for('static', filename='script.js')}}"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Installs Viewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="theme-switcher" onclick="toggleTheme()">🌙</div>
+    <div class="container">
+        <h1>Real Installs Viewer</h1>
+        <div class="search-container">
+            <div class="input-wrapper">
+                <input type="text" id="search-input" placeholder="Enter app name from Play Store...">
+                <button id="clear-btn" onclick="clearSearch()">×</button>
+            </div>
+            <button onclick="searchApp()">Search</button>
+        </div>
+        <div id="result" class="result">
+            <p>Enter an app name above to get started.</p>
+        </div>
+        <button id="copy-btn" onclick="copyResults()" style="display: none;">Copy Results</button>
+    </div>
+    <footer>
+        <p>Made by: Samir(fuddi)</p>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
 </html>
