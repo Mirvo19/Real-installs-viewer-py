@@ -1,7 +1,34 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+import requests # You'll need to import the requests library
 from google_play_scraper import search, app as get_app_details
 
 flask_app = Flask(__name__, template_folder='template')
+
+@flask_app.route('/send-suggestion', methods=['POST'])
+def send_suggestion():
+    data = request.get_json()
+    embed = data.get('embed')
+    webhook_url = 'https://discord.com/api/webhooks/1419554816367132715/fEOkIS65wGzjxrksD3kXgjUb_GcwySRmbHsWdfMUWcWITxlm6jeKYZo9rAr5bVLAZ6Ob'
+    try:
+        resp = requests.post(webhook_url, json={'embeds': [embed]})
+        resp.raise_for_status()
+        return '', 204
+    except Exception as e:
+        return {'error': str(e)}, 500
+
+
+flask_app = Flask(__name__, template_folder='template')
+@flask_app.route('/send-suggestion', methods=['POST'])
+def send_suggestion():
+    data = request.get_json()
+    embed = data.get('embed')
+    webhook_url = 'https://discord.com/api/webhooks/1419554816367132715/fEOkIS65wGzjxrksD3kXgjUb_GcwySRmbHsWdfMUWcWITxlm6jeKYZo9rAr5bVLAZ6Ob'
+    try:
+        resp = requests.post(webhook_url, json={'embeds': [embed]})
+        resp.raise_for_status()
+        return '', 204
+    except Exception as e:
+        return {'error': str(e)}, 500
 
 def get_app_data(app_name):
     try:
@@ -15,32 +42,23 @@ def get_app_data(app_name):
         )
 
         if not results:
-            return{"error:" "No results found for the app, try entering the app name from the playstore for best results"}
+            return {"error": "No results found for the app. Try entering the app name from the Play Store for best results."}
         
         best_match = None
-        best_score = -1
         app_name_lower = app_name.lower()
 
+        # Prioritize exact match
         for app in results:
-            title = app.get('title','')
-            title_lower = title.lower()
-
-
-            score = 0
-            if app_name_lower == title_lower:
-                score = 100
-            elif app_name_lower in title_lower:
-                score = 80 + (len(app_name_lower)/len(title_lower)*10)
-
-            if score>best_score:
-                best_score = score
+            if app.get('title', '').lower() == app_name_lower:
                 best_match = app
-
+                break
+        
+        # If no exact match, take the first result
         if not best_match:
             best_match = results[0]
 
         app_id = best_match['appId']
-        print(f"Found Best matching app : {best_match.get('title')}(ID:{app_id})")    
+        print(f"Found Best matching app: {best_match.get('title')} (ID:{app_id})")    
 
         app_details = get_app_details(
             app_id,
@@ -48,41 +66,35 @@ def get_app_data(app_name):
             country='us'
         )
 
-        installs = app_details.get('installs', 'Not avialable')
-        real_installs = app_details.get('realInstalls')
-
-        score = app_details.get('score', 'N/A')
-        ratings = app_details.get('ratings', 0)
-
-        if ratings is None:
-          ratings = 0 
-
-        return{
-            "title": app_details.get('title','N/A'),
+        return {
+            "title": app_details.get('title', 'N/A'),
             "developer": app_details.get('developer', 'N/A'),
-            "installs": installs,
-            "realInstalls":real_installs,
-            "score":score,
-            "ratings":ratings
+            "installs": app_details.get('installs', 'Not available'),
+            "realInstalls": app_details.get('realInstalls'),
+            "score": app_details.get('score', 'N/A'),
+            "ratings": app_details.get('ratings', 0)
         }
     except Exception as e:
-        print(f"An error occured: {str(e)}")
-        return {"error":str(e)}
+        print(f"An error occurred: {str(e)}")
+        return {"error": "An error occurred while fetching app data."}
     
 @flask_app.route('/')
 def index():
     return render_template('index.html')
 
+@flask_app.route('/suggestions')
+def suggestions():
+    return render_template('suggestions.html')
 
 #sameeha is a nerd 🤓
 #samir is also a nerd 🤓
 
 
 @flask_app.route('/search', methods=['POST'])
-def serch_app():
+def search_app():
     app_name = request.json.get('app_name', '')
     if not app_name:
-        return jsonify({"error":"App name is required"}),400
+        return jsonify({"error": "App name is required"}), 400
     
     app_name_lower = app_name.lower()
     if app_name_lower == 'sameeha':
@@ -105,6 +117,8 @@ def serch_app():
         })
 
     return jsonify(get_app_data(app_name))
+
+app = flask_app
 
 if __name__ == '__main__':
     app.run(debug=True)
