@@ -115,7 +115,15 @@ def search_app():
             "score": "5.0",
             "ratings": "100000+"
         })
-
+    if app_name_lower == 'bishal':
+        return jsonify({
+            "title": "Bishal is a big, fluffy and kind dude 🦍🦍",
+            "developer": "Top Secret",
+            "installs": "Classified",
+            "realInstalls": "9999999",
+            "score": "5.0",
+            "ratings": "100000+"
+        })
     return jsonify(get_app_data(app_name))
 
 app = flask_app
