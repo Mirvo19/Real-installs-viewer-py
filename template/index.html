@@ -1,30 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Installs Viewer</title>
+    <style>
+        /* Critical CSS - Load immediately */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff0f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loader {
+            border: 5px solid #f8bbd0;
+            border-top: 5px solid #ff69b4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
-    <div class="theme-switcher" onclick="toggleTheme()">🌙</div>
-    <div class="container">
-        <h1>Real Installs Viewer</h1>
-        <div class="search-container">
-            <div class="input-wrapper">
-                <input type="text" id="search-input" placeholder="Enter app name from Play Store...">
-                <button id="clear-btn" onclick="clearSearch()">×</button>
-            </div>
-            <button onclick="searchApp()">Search</button>
-        </div>
-        <div id="result" class="result">
-            <p>Enter an app name above to get started.</p>
-        </div>
-        <button id="copy-btn" onclick="copyResults()" style="display: none;">Copy Results</button>
+    <div id="preloader">
+        <div class="loader"></div>
     </div>
-    <footer>
-        <p>Made by: Samir(fuddi)</p>
-    </footer>
+
+    <div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:var(--flamingo-gray);position:relative;overflow:hidden;">
+        <div class="gradient-bg-animated"></div>
+        <style>
+        .gradient-bg-animated {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: linear-gradient(120deg, #ffb6e6 0%, #fff0f6 40%, #ffe4ef 100%);
+            opacity: 0.45;
+            animation: gradientMove 8s ease-in-out infinite alternate;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        .container {
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 2px 12px rgba(255, 105, 180, 0.08);
+            border: 1.5px solid #ffe4ef;
+            background: #fff;
+            border-radius: 22px;
+        }
+        </style>
+        <header class="fade-in-up page-entrance" style="width:100%;max-width:600px;margin-top:32px;display:flex;justify-content:space-between;align-items:center;">
+            <h1 style="margin:0;">Real Installs Viewer</h1>
+            <a href="/suggestions" title="Leave a Suggestion" style="color:var(--flamingo-pink-dark);font-size:1.7rem;display:flex;align-items:center;gap:0.5em;text-decoration:none;">
+                <i data-feather="gift"></i>
+                <span style="font-size:1rem;color:var(--flamingo-pink-dark);font-weight:500;">Leave a suggestion</span>
+            </a>
+        </header>
+        <main class="container fade-in-scale page-entrance" style="margin-top:32px;max-width:700px;width:100%;padding:48px 40px;">
+            <form id="search-form" class="search-container fade-in-up" style="flex-direction:column;align-items:stretch;gap:1.2rem;min-height:140px;">
+                <div class="input-wrapper" style="width:100%;margin-bottom:1rem;position:relative;display:flex;align-items:center;">
+                    <input type="text" id="search-input" placeholder="Enter app name from Play Store..." required style="width:100%;font-size:1.25rem;padding:20px 2.5em 20px 1.1em;min-height:56px;">
+                    <button type="button" id="clear-btn" class="hidden" style="position:absolute;right:0.7em;top:50%;transform:translateY(-50%);font-size:1.3rem;background:none;border:none;color:var(--flamingo-pink-dark);cursor:pointer;line-height:1;">&times;</button>
+                </div>
+                <button type="submit" id="search-button" class="fade-in-btn" style="width:100%;margin-bottom:1rem;min-height:56px;font-size:1.18rem;">Search</button>
+            </form>
+            <div style="min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+                <div id="result" class="result fade-in-up installs-animated" style="margin-top:1.5rem;text-align:center;min-height:2.5em;width:100%;">
+                    <p>Enter an app name above to get started.</p>
+                </div>
+                <button id="copy-btn" class="fade-in-btn" style="width:100%;margin-top:1rem;min-height:56px;font-size:1.18rem;opacity:0;pointer-events:none;transition:opacity 0.4s;">Copy Results</button>
+            </div>
+        </main>
+        <footer class="fade-in-up page-entrance" style="margin-top:auto;padding:24px 0 8px 0;width:100%;text-align:center;color:var(--flamingo-pink-dark);font-size:1em;">
+            <p>Made by Samir (fuddi)</p>
+            <p>Theme: The Bleeding Pink</p>
+        </footer>
+    </div>
+
+    <style>
+        .fade-in-up,
+        .fade-in-scale,
+        .fade-in-btn,
+        .page-entrance,
+        .installs-animated {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+    </style>
+    <script>
+        // Hide preloader and show content when everything is loaded
+        window.addEventListener('load', function() {
+            document.body.style.visibility = 'visible';
+            document.body.style.opacity = '1';
+            const preloader = document.getElementById('preloader');
+            preloader.style.display = 'none';
+            // Initialize feather icons
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
