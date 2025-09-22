@@ -1,3 +1,4 @@
 Flask
 google_play_scraper
 gunicorn
+requests
